@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.min.js"> </script>
+    <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"> </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js">    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"> </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"> </script>
+
     <style>
         body {
             margin: 0;
@@ -57,11 +66,13 @@
         button:hover {
             background-color: #45a049;
         }
+
         .login-container a {
             text-decoration: none;
             color: #007bff;
             font-size: 14px;
         }
+
         a {
             color: #4CAF50;
             text-decoration: none;
@@ -76,7 +87,8 @@
 
 <body>
     <div class="container">
-        <form action="/registro" method="post">
+        <form id="nuevoRegistro">
+            @csrf
             <div class="form-group">
                 <label for="cedula">Cedula:</label>
                 <input type="text" id="cedula" name="cedula" required>
@@ -93,8 +105,8 @@
             </div>
 
             <div class="form-group">
-                <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
             </div>
 
             <div class="form-group">
@@ -109,6 +121,72 @@
 
         <p>Ya tienes una cuenta. Inicia Sesión <a href="/login">aquí</a>.</p>
     </div>
+
+
+    <script>
+    $(document).ready(function () {
+
+        $("#nuevoRegistro").submit(function (event) {
+            event.preventDefault();
+
+            if (validarCedulaEcuatoriana($("#cedula").val()) == false) {
+                $("#informacion").text("Cédula no válida");
+                $("#modalInformativo").modal("show");
+                return;
+            }
+            
+            var formData = $(this).serialize();
+
+            console.log(formData);
+            $.ajax({
+                url: "{{route('insertarParticipantes') }}", type: "POST", data:
+                    formData, dataType: "json", encode: true,
+            }).done(function (data) {
+                setTimeout(function () {
+                    window.location.href = "{{ route('login') }}";
+                }, 2000);
+            }).fail(function (xhr, status, error) {
+                $("#informacion").text("Error de proceso : cédula duplicada");
+                console.error("Error en la solicitud: " + error);
+            });
+
+        });
+
+    });
+    function validarCedulaEcuatoriana(cedula) {
+        if (cedula.length !== 10) {
+            return false;
+        }
+
+        if (!/^\d+$/.test(cedula)) {
+            return false;
+        }
+
+        if (!/(.)\1{2,}/.test(cedula)) {
+            const digitos = cedula.split('').map(Number);
+            const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+            let suma = 0;
+
+            for (let i = 0; i < 9; i++) {
+                let resultado = digitos[i] * coeficientes[i];
+                if (resultado > 9) {
+                    resultado -= 9;
+                }
+                suma += resultado;
+            }
+
+            const digitoVerificador = (10 - (suma % 10)) % 10;
+
+            return digitoVerificador === digitos[9];
+        }
+
+        return false;
+    }
+
+
+
+</script>
 </body>
+
 
 </html>

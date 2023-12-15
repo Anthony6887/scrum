@@ -4,13 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Iniciar Sesión</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.min.js"> </script>
+    <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"> </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js">    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"> </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"> </script>
+
     <style>
-        /* Estilos para un diseño más atractivo */
         body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            /* Reemplaza 'tu_imagen_de_fondo.jpg' con la ruta de tu imagen */
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -72,15 +79,53 @@
 <body>
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
-        <form action="/login" method="post">
-            <input type="text" name="number" placeholder="Cédula" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
+        <form id="formLogin">
+            <input type="text" id="cedula" name="cedula" placeholder="Cédula" required>
+            <input type="password" id="clave" name="clave" placeholder="Contraseña" required>
             <input type="submit" value="Iniciar Sesión">
         </form>
         <br>
         <br>
         ¿Aún no tienes una cuenta registrate?<a href="/registro"> Aquí</a>
     </div>
+
+    <script>
+        $(document).ready(function () {
+
+            $("#formLogin").submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serializeArray();
+                var cedula = '';
+                formData.forEach(function(field) {
+                    if (field.name === "cedula") {
+                        cedula = field.value;
+                    }
+                });
+
+                $.ajax({
+                    url: "http://localhost/Apis/Personas/apiPersonas.php", type: "GET", data:
+                        formData, dataType: "json", encode: true,
+                }).done(function (data) {
+                    console.log(data)
+                    if (data.length != 0) {
+                        setTimeout(function () {
+
+                            window.location.href = "{{ route('mostrarProyectos')}}?cedula=" + cedula;
+
+                        }, 2000);
+                    } else {
+
+                    }
+
+                }).fail(function (xhr, status, error) {
+                    $("#informacion").text("Error de proceso : cédula duplicada");
+                    console.error("Error en la solicitud: " + error);
+                });
+
+            });
+
+        });
+    </script>
 </body>
 
 </html>

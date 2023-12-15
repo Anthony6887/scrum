@@ -31,8 +31,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto my-2 my-lg-0">
                     <li class="nav-item"><a class="nav-link" href="#acercaDe">Acerca de</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#proyectos">Proyectos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{route('mostrarParticipantes')}}">Registro</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('login')}}">Proyectos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contactanos">Contactanos</a></li>
                 </ul>
             </div>
