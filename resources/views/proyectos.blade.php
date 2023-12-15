@@ -52,7 +52,7 @@
                             Actualizar
                         </button>
                         <form class="formTareas" data-id="{{ $proyecto['id'] }}">
-                            <input type="text" value="{{ $proyecto['id'] }}" name="idProyecto">
+                            <input type="text" value="{{ $proyecto['id'] }}" name="idProyecto" hidden>
                             @csrf
                             <button type="submit" class="btn btn-success">Revisar</button>
                         </form>
