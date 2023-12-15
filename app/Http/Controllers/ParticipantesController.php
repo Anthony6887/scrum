@@ -9,38 +9,41 @@ use GuzzleHttp\Client;
 
 class ParticipantesController extends Controller
 {
-    public function mostrarParticipantes(){
- 
-         $listaParticipantes = $this -> obtenerParticipantes();
- 
-         return view('participantes', compact('listaParticipantes'));
+    public function mostrarParticipantes()
+    {
+
+        $listaParticipantes = $this->obtenerParticipantes();
+
+        return view('participantes', compact('listaParticipantes'));
     }
 
-    public function obtenerParticipantes(){
+    public function obtenerParticipantes()
+    {
         $client = new Client();
 
-         $response = $client->get("http://localhost/Apis/Personas/apiPersonas.php");
- 
-         $listaParticipantes = json_decode($response->getBody(), true);
-         return $listaParticipantes;
+        $response = $client->get("http://localhost/Apis/Personas/apiPersonas.php");
+
+        $listaParticipantes = json_decode($response->getBody(), true);
+        return $listaParticipantes;
     }
 
-    public function insertarParticipantes(Request $peticion){
+    public function insertarParticipantes(Request $peticion)
+    {
         $cedula = $peticion->input("cedula");
-        $nombre=$peticion->input("nombre");
-        $apellido= $peticion->input("apellido");
-        $fechaNacimiento= $peticion->input("fechaNacimiento");
+        $nombre = $peticion->input("nombre");
+        $apellido = $peticion->input("apellido");
+        $fechaNacimiento = $peticion->input("fechaNacimiento");
         $rol = $peticion->input("rol");
         $clave = $peticion->input("clave");
 
-        if($cedula==''|| $nombre ==''|| $apellido =='' || $fechaNacimiento =='' || $rol =='' || $clave ==''){
+        if ($cedula == '' || $nombre == '' || $apellido == '' || $fechaNacimiento == '' || $rol == '' || $clave == '') {
             return false;
         }
 
         $cliente = new Client();
 
         $url = "http://localhost/Apis/Personas/apiPersonas.php";
-    
+
         $datos = [
             'cedula' => $cedula,
             'nombre' => $nombre,
@@ -49,20 +52,21 @@ class ParticipantesController extends Controller
             'rol' => $rol,
             'clave' => $clave
         ];
-    
+
         $respuesta = $cliente->request('POST', $url, [
             'form_params' => $datos,
         ]);
 
         $contenido = $respuesta->getBody()->getContents();
-        if($contenido == 'true'){
+        if ($contenido == 'true') {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public function actualizarParticipantes(Request $peticion){
+    public function actualizarParticipantes(Request $peticion)
+    {
         $cedula = $peticion->input("cedula");
         $nombre = $peticion->input("nombre");
         $apellido = $peticion->input("apellido");
@@ -70,14 +74,14 @@ class ParticipantesController extends Controller
         $rol = $peticion->input("rol");
         $clave = $peticion->input("clave");
 
-        if($cedula==''|| $nombre ==''|| $apellido =='' || $fechaNacimiento =='' || $rol =='' || $clave ==''){
+        if ($cedula == '' || $nombre == '' || $apellido == '' || $fechaNacimiento == '' || $rol == '' || $clave == '') {
             return false;
         }
 
         $client = new Client();
-    
+
         $url = "http://localhost/Apis/Personas/apiPersonas.php";
-    
+
         $data = [
             'cedula' => $cedula,
             'nombre' => $nombre,
@@ -86,15 +90,15 @@ class ParticipantesController extends Controller
             'rol' => $rol,
             'clave' => $clave,
         ];
-    
+
         $jsonData = json_encode($data);
-    
+
         try {
             $response = $client->request('PUT', $url, [
                 'body' => $jsonData,
                 'headers' => ['Content-Type' => 'application/json'],
             ]);
-    
+
             $responseContent = $response->getBody()->getContents();
 
             if ($responseContent == 'true') {
@@ -107,29 +111,30 @@ class ParticipantesController extends Controller
         }
     }
 
-    public function eliminarParticipantes(Request $peticion){
+    public function eliminarParticipantes(Request $peticion)
+    {
         $cedula = $peticion->input("cedula");
 
-        if($cedula==''){
+        if ($cedula == '') {
             return false;
         }
 
         $client = new Client();
-    
+
         $url = "http://localhost/Apis/Personas/apiPersonas.php";
-    
+
         $data = [
             'cedula' => $cedula
         ];
-    
+
         $jsonData = json_encode($data);
-    
+
         try {
             $response = $client->request('DELETE', $url, [
                 'body' => $jsonData,
                 'headers' => ['Content-Type' => 'application/json'],
             ]);
-    
+
             $responseContent = $response->getBody()->getContents();
 
             if ($responseContent == 'true') {

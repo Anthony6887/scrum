@@ -27,47 +27,46 @@
 
     @section('content ')
     <div class="contenedor" align="center">
-        <h2>Registro de Participantes</h2>                
-        <button type="button" class="btn btn-primary" data-toggle="modal"
-                    data-target="#myModal">Agregar Participante</button>
-    <div class="table">
-        <table class="table table - striped " id=" tablaParticipantes">
-            <thead>
-                <tr>
-                    <th scope="col">Cedula</th>
-                    <th scope=" col"> Nombre </th>
-                    <th scope=" col"> Apellido </th>
-                    <th scope="col"> Fecha de Nacimiento </th>
-                    <th scope=" col"> Rol </th>
-                    <th scope="col"> Clave</th>
-                    <th scope=" col"> Acciones </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($listaParticipantes as $participante)
-                <tr>
-                    <td> {{ $participante['cedula']}}</td>
-                    <td> {{ $participante['nombre']}}</td>
-                    <td> {{ $participante['apellido']}}</td>
-                    <td> {{ $participante['fechaNacimiento']}}</td>
-                    <td> {{ $participante['rol']}}</td>
-                    <td> {{ $participante['clave']}}</td>
-                    <td>
-                        <button type="button" class="btn btn-warning cargarModal" data-toggle="modal"
-                            data-target="#myModalEditar">
-                            Actualizar </button>
-                        <button type="button" class="btn btn-danger cargarModal" data-toggle="modal"
-                            data-target="#eliminarModal">
-                            Eliminar </button>
+        <h2>Registro de Participantes</h2>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Agregar
+            Participante</button>
+        <div class="table">
+            <table class="table table - striped " id=" tablaParticipantes">
+                <thead>
+                    <tr>
+                        <th scope="col">Cedula</th>
+                        <th scope=" col"> Nombre </th>
+                        <th scope=" col"> Apellido </th>
+                        <th scope="col"> Fecha de Nacimiento </th>
+                        <th scope=" col"> Rol </th>
+                        <th scope=" col"> Acciones </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($listaParticipantes as $participante)
+                    <tr>
+                        <td> {{ $participante['cedula']}}</td>
+                        <td> {{ $participante['nombre']}}</td>
+                        <td> {{ $participante['apellido']}}</td>
+                        <td> {{ $participante['fechaNacimiento']}}</td>
+                        <td> {{ $participante['rol']}}</td>
+                        <td style='display:none'> {{ $participante['clave']}}</td>
+                        <td>
+                            <button type="button" class="btn btn-warning cargarModal" data-toggle="modal"
+                                data-target="#myModalEditar">
+                                Actualizar </button>
+                            <button type="button" class="btn btn-danger cargarModal" data-toggle="modal"
+                                data-target="#eliminarModal">
+                                Eliminar </button>
 
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
-    </div>
-    
+
     @show
     <div class="modal" id="myModal">
         <div class="modal-dialog modal-lg">
@@ -89,19 +88,21 @@
                         </div>
                         <div class="form-group">
                             <label for="apellido">Apellido:</label>
-                            <input type="text" class="form-control bloquearNumeros" id="apellido" name="apellido" required>
+                            <input type="text" class="form-control bloquearNumeros" id="apellido" name="apellido"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="fechaNacimiento">Fecha de
-                                Nacimiento:</label><span id="fechaValida" hidden>Tiene que ser mayor de edad</span>
-                            <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" max="2004-01-01" min="1980-01-01"
-                                required>
+                                Nacimiento:</label><span style='color:red' id="fechaValida" hidden> Tiene que ser mayor
+                                de edad</span>
+                            <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento"
+                                max="2004-01-01" min="1980-01-01" required>
                         </div>
                         <div class="form-group">
                             <label for="rol">Rol:</label>
                             <select class="form-control" id="rol" name="rol" required>
-                                <option value="scrumMaster">Scrum Master</option>
-                                <option value="desarrollador">Desarrollador</option>
+                                <option value="ScrumMaster">Scrum Master</option>
+                                <option value="Desarrollador">Desarrollador</option>
                                 </option>
                             </select>
                         </div>
@@ -138,13 +139,14 @@
                         </div>
                         <div class="form-group">
                             <label for="apellido">Apellido:</label>
-                            <input type="text" class="form-control bloquearNumeros" id="apellidoE" name="apellido" required>
+                            <input type="text" class="form-control bloquearNumeros" id="apellidoE" name="apellido"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="fechaNacimiento">Fecha de
                                 Nacimiento:</label><span id="fechaValidaE" hidden>Tiene que ser mayor de edad</span>
-                                <input type="date" class="form-control" id="fechaNacimientoE" name="fechaNacimiento" max="2004-01-01" min="1980-01-01"
-                                required>
+                            <input type="date" class="form-control" id="fechaNacimientoE" name="fechaNacimiento"
+                                max="2004-01-01" min="1980-01-01" required>
                         </div>
                         <div class="form-group">
                             <label for="rol">Rol:</label>
@@ -220,24 +222,24 @@
     <script>
         $(document).ready(function () {
 
-            $('#fechaNacimiento').on('input', function() {
+            $('#fechaNacimiento').on('input', function () {
                 var selectedDate = new Date($(this).val());
                 var minDate = new Date('2004-01-01');
                 if (selectedDate > minDate) {
                     $(this).val('');
                     $('#fechaValida').attr("hidden", false);
-                }else{
+                } else {
                     $('#fechaValida').attr("hidden", true);
                 }
             });
 
-            $('#fechaNacimientoE').on('input', function() {
+            $('#fechaNacimientoE').on('input', function () {
                 var selectedDate = new Date($(this).val());
                 var minDate = new Date('2004-01-01');
                 if (selectedDate > minDate) {
                     $(this).val('');
                     $('#fechaValidaE').attr("hidden", false);
-                }else{
+                } else {
                     $('#fechaValidaE').attr("hidden", true);
                 }
             });
@@ -245,7 +247,7 @@
             $("#agregarParticipantes").submit(function (event) {
                 event.preventDefault();
 
-                if (validarCedulaEcuatoriana($("#cedula").val()) == false){
+                if (validarCedulaEcuatoriana($("#cedula").val()) == false) {
                     $("#informacion").text("Cédula no válida");
                     $("#modalInformativo").modal("show");
                     return;
@@ -328,27 +330,41 @@
             });
 
         });
-    function validarCedulaEcuatoriana(cedula) {
-    if (cedula.length !== 10) {
-        return false;
-    }
+        function validarCedulaEcuatoriana(cedula) {
+            // Verificar si la cédula tiene 10 dígitos
+            if (cedula.length !== 10) {
+                return false;
+            }
 
-    const digitos = cedula.split('').map(Number);
-    const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
-    let suma = 0;
+            // Verificar si la cédula contiene solo dígitos
+            if (!/^\d+$/.test(cedula)) {
+                return false;
+            }
 
-    for (let i = 0; i < 9; i++) {
-        let resultado = digitos[i] * coeficientes[i];
-        if (resultado > 9) {
-            resultado -= 9;
+            // Verificar si hay al menos dos dígitos diferentes en la cédula
+            if (!/(.)\1{2,}/.test(cedula)) {
+                const digitos = cedula.split('').map(Number);
+                const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+                let suma = 0;
+
+                for (let i = 0; i < 9; i++) {
+                    let resultado = digitos[i] * coeficientes[i];
+                    if (resultado > 9) {
+                        resultado -= 9;
+                    }
+                    suma += resultado;
+                }
+
+                const digitoVerificador = (10 - (suma % 10)) % 10;
+
+                return digitoVerificador === digitos[9];
+            }
+
+            return false;
         }
-        suma += resultado;
-    }
 
-    const digitoVerificador = (10 - (suma % 10)) % 10;
 
-    return digitoVerificador === digitos[9];
-}
+
     </script>
 </body>
 

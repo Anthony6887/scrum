@@ -17,6 +17,12 @@ use App\Http\Controllers\ParticipantesController;
 Route::get('/', function () {
     return view('principal');
 });
+Route::get('/login', function () {
+    return view('login');
+});
+Route::get('/registro', function () {
+    return view('registro');
+});
 
 Route::get('/participantes', [ParticipantesController::class, 'mostrarParticipantes'])->name('mostrarParticipantes');
 Route::post('/principal/participantes', [ParticipantesController::class, 'insertarParticipantes'])->name('insertarParticipantes');
