@@ -18,8 +18,9 @@ Route::get('/registro', function () {
 
 Route::get('/principal/participantes',[ParticipantesController::class,'mostrarParticipantes'])->name('mostrarParticipantes');
 Route::post('/principal/participantes',[ParticipantesController::class,'insertarParticipantes'])->name('insertarParticipantes');
-Route::put('/principal/participantes',[ParticipantesController::class,'actualizarParticipantes'])->name('actualizarParticipantes');
+Route::post('/participante',[ParticipantesController::class,'agregarParticipantes'])->name('agregarParticipantes');
 Route::delete('/principal/participantes',[ParticipantesController::class,'eliminarParticipantes'])->name('eliminarParticipantes');
+Route::get('participante',[ParticipantesController::class,'establecerParticipante'])->name('establecerParticipante');
 
 Route::get('/principal/proyectos', [ProyectosController::class, 'mostrarProyectos'])->name('mostrarProyectos');
 Route::post('/principal/proyectos',[ProyectosController::class,'insertarProyectos'])->name('insertarProyectos');
