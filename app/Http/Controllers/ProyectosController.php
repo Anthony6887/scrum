@@ -7,29 +7,17 @@ use Illuminate\Http\Request;
 
 class ProyectosController extends Controller
 {
-    public function mostrarProyectos(Request $peticion)
+    public function mostrarProyectos()
     {
-        session_start();
-        $cedula = '';
-        try {
-            $cedula = $peticion->input("cedula");
-            $_SESSION['cedula']= $cedula;
-        } catch (\Throwable $th) {
-            $cedula=$_SESSION['cedula'];
-        }
-
-        $listaProyectos = $this->obtenerProyectos($cedula);
+        $listaProyectos = $this->obtenerProyectos();
         return view('proyectos', compact('listaProyectos'));
-
-
     }
 
-    public function obtenerProyectos($cedula)
+    public function obtenerProyectos()
     {
         $client = new Client();
-
-        $response = $client->get("http://localhost/Apis/Proyectos/apiProyectos.php?id=".$cedula);
-
+        session_start();
+        $response = $client->get("http://localhost/Apis/Proyectos/apiProyectos.php?participante=".$_SESSION['usuario']);
         $listaParticipantes = json_decode($response->getBody(), true);
         return $listaParticipantes;
     }
@@ -42,7 +30,7 @@ class ProyectosController extends Controller
         $fechaFin = $peticion->input("fechaFin");
         
         session_start();
-        $participante = $_SESSION['cedula'];
+        $participante = $_SESSION['usuario'];
 
         if ($nombre == '' || $descripcion == '' || $fechaInicio == '' || $fechaFin == '') {
             return false;

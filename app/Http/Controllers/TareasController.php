@@ -10,8 +10,8 @@ class TareasController extends Controller
     {
         session_start();
         $listaTareas = $this->obtenerTareas($_SESSION['idProyecto']);
-
-        return view('tareas', compact('listaTareas'));
+        $usuario = $_SESSION['usuario'];
+        return view('tareas', compact('listaTareas','usuario'));
     }
 
     public function obtenerTareas($idProyecto)
@@ -68,28 +68,27 @@ class TareasController extends Controller
 
     public function actualizarTareas(Request $peticion)
     {
-        $id = $peticion->input("id");
-        $nombre = $peticion->input("nombreProyecto");
-        $descripcion = $peticion->input("descripcionProyecto");
-        $fechaInicio = $peticion->input("fechaInicio");
-        $fechaFin = $peticion->input("fechaFin");
+        $idTarea = $peticion->input("idTarea");
         $estado = $peticion->input("estado");
+        session_start();
+        $participante = $_SESSION["usuario"];
+        
 
-        if ($nombre == '' || $descripcion == '' || $fechaInicio == '' || $fechaFin == '') {
-            return false;
-        }
 
         $client = new Client();
 
-        $url = "http://localhost/Apis/Tareas/apiTareas.php";
+        $url = "";
+
+        if($estado == 'progreso'){
+            $url = "http://localhost/Apis/Tareas/apiTareas.php?progreso=0";
+        }else{
+            $url = "http://localhost/Apis/Tareas/apiTareas.php";
+        }
+
 
         $data = [
-            'id' => $id,
-            'nombre' => $nombre,
-            'descripcion' => $descripcion,
-            'fechaInicio' => $fechaInicio,
-            'fechaFin' => $fechaFin,
-            'estado' => $estado
+            'idTarea' => $idTarea,
+            'encargado' => $participante
         ];
 
         $jsonData = json_encode($data);
@@ -114,9 +113,9 @@ class TareasController extends Controller
 
     public function eliminarTareas(Request $peticion)
     {
-        $cedula = $peticion->input("cedula");
+        $idTarea = $peticion->input("idTarea");
 
-        if ($cedula == '') {
+        if ($idTarea == '') {
             return false;
         }
 
@@ -125,7 +124,7 @@ class TareasController extends Controller
         $url = "http://localhost/Apis/Tareas/apiTareas.php";
 
         $data = [
-            'cedula' => $cedula
+            'idTarea' => $idTarea
         ];
 
         $jsonData = json_encode($data);

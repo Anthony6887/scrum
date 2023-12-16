@@ -9,6 +9,13 @@ use GuzzleHttp\Client;
 
 class ParticipantesController extends Controller
 {
+    public function establecerParticipante(Request $peticion){
+        $cedula = $peticion->input("cedula");
+        session_start();
+        $_SESSION['usuario']=$cedula;
+        return redirect()->route('mostrarProyectos');
+    }
+
     public function mostrarParticipantes(){
  
          $listaParticipantes = $this -> obtenerParticipantes();
@@ -18,21 +25,19 @@ class ParticipantesController extends Controller
 
     public function obtenerParticipantes(){
         $client = new Client();
+        session_start();
 
-         $response = $client->get("http://localhost/Apis/Personas/apiPersonas.php");
+         $response = $client->get("http://localhost/Apis/Personas/apiPersonas.php?idProyecto=".$_SESSION['idProyecto']);
  
          $listaParticipantes = json_decode($response->getBody(), true);
          return $listaParticipantes;
     }
 
-    public function insertarParticipantes(Request $peticion){
+    public function agregarParticipantes(Request $peticion){
         $cedula = $peticion->input("cedula");
-        $nombre=$peticion->input("nombre");
-        $apellido= $peticion->input("apellido");
-        $fechaNacimiento= $peticion->input("fechaNacimiento");
-        $clave = $peticion->input("clave");
+        session_start();
 
-        if($cedula==''|| $nombre ==''|| $apellido =='' || $fechaNacimiento =='' || $clave ==''){
+        if($cedula==''){
             return false;
         }
 
@@ -42,10 +47,7 @@ class ParticipantesController extends Controller
     
         $datos = [
             'cedula' => $cedula,
-            'nombre' => $nombre,
-            'apellido' => $apellido,
-            'fechaNacimiento' => $fechaNacimiento,
-            'clave' => $clave
+            'idProyecto' => $_SESSION['idProyecto']
         ];
     
         $respuesta = $cliente->request('POST', $url, [
@@ -60,15 +62,14 @@ class ParticipantesController extends Controller
         }
     }
 
-    public function actualizarParticipantes(Request $peticion){
+    public function insertarParticipantes(Request $peticion){
         $cedula = $peticion->input("cedula");
         $nombre = $peticion->input("nombre");
         $apellido = $peticion->input("apellido");
         $fechaNacimiento = $peticion->input("fechaNacimiento");
-        $rol = $peticion->input("rol");
         $clave = $peticion->input("clave");
 
-        if($cedula==''|| $nombre ==''|| $apellido =='' || $fechaNacimiento =='' || $rol =='' || $clave ==''){
+        if($cedula==''|| $nombre ==''|| $apellido =='' || $fechaNacimiento =='' || $clave ==''){
             return false;
         }
 
@@ -81,26 +82,18 @@ class ParticipantesController extends Controller
             'nombre' => $nombre,
             'apellido' => $apellido,
             'fechaNacimiento' => $fechaNacimiento,
-            'rol' => $rol,
             'clave' => $clave,
+            'insertar'=> "abc"
         ];
     
-        $jsonData = json_encode($data);
-    
-        try {
-            $response = $client->request('PUT', $url, [
-                'body' => $jsonData,
-                'headers' => ['Content-Type' => 'application/json'],
-            ]);
-    
-            $responseContent = $response->getBody()->getContents();
+        $respuesta = $client->request('POST', $url, [
+            'form_params' => $data,
+        ]);
 
-            if ($responseContent == 'true') {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (\Exception $e) {
+        $contenido = $respuesta->getBody()->getContents();
+        if($contenido == 'true'){
+            return true;
+        }else{
             return false;
         }
     }
