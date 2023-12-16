@@ -96,7 +96,7 @@
                 event.preventDefault();
                 var formData = $(this).serializeArray();
                 var cedula = '';
-                formData.forEach(function(field) {
+                formData.forEach(function (field) {
                     if (field.name === "cedula") {
                         cedula = field.value;
                     }
@@ -106,12 +106,13 @@
                     url: "http://localhost/Apis/Personas/apiPersonas.php", type: "GET", data:
                         formData, dataType: "json", encode: true,
                 }).done(function (data) {
-                    console.log(data)
                     if (data.length != 0) {
+                        cedula = data[0]['cedula'];
+
+                        window.location.href="{{ route('establecerParticipante')}}?cedula=" + cedula;
+
                         setTimeout(function () {
-
-                            window.location.href = "{{ route('mostrarProyectos')}}?cedula=" + cedula;
-
+                            //window.location.href = "{{ route('mostrarProyectos')}}";
                         }, 2000);
                     } else {
 

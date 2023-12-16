@@ -124,68 +124,67 @@
 
 
     <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        $("#nuevoRegistro").submit(function (event) {
-            event.preventDefault();
+            $("#nuevoRegistro").submit(function (event) {
+                event.preventDefault();
 
-            if (validarCedulaEcuatoriana($("#cedula").val()) == false) {
-                $("#informacion").text("Cédula no válida");
-                $("#modalInformativo").modal("show");
-                return;
-            }
-            
-            var formData = $(this).serialize();
+                if (validarCedulaEcuatoriana($("#cedula").val()) == false) {
+                    $("#informacion").text("Cédula no válida");
+                    $("#modalInformativo").modal("show");
+                    return;
+                }
 
-            console.log(formData);
-            $.ajax({
-                url: "{{route('insertarParticipantes') }}", type: "POST", data:
-                    formData, dataType: "json", encode: true,
-            }).done(function (data) {
-                setTimeout(function () {
-                    window.location.href = "{{ route('login') }}";
-                }, 2000);
-            }).fail(function (xhr, status, error) {
-                $("#informacion").text("Error de proceso : cédula duplicada");
-                console.error("Error en la solicitud: " + error);
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: "{{route('insertarParticipantes') }}", type: "POST", data:
+                        formData, dataType: "json", encode: true,
+                }).done(function (data) {
+                    setTimeout(function () {
+                        window.location.href = "{{ route('login') }}";
+                    }, 2000);
+                }).fail(function (xhr, status, error) {
+                    $("#informacion").text("Error de proceso : cédula duplicada");
+                    console.error("Error en la solicitud: " + error);
+                });
+
             });
 
         });
-
-    });
-    function validarCedulaEcuatoriana(cedula) {
-        if (cedula.length !== 10) {
-            return false;
-        }
-
-        if (!/^\d+$/.test(cedula)) {
-            return false;
-        }
-
-        if (!/(.)\1{2,}/.test(cedula)) {
-            const digitos = cedula.split('').map(Number);
-            const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
-            let suma = 0;
-
-            for (let i = 0; i < 9; i++) {
-                let resultado = digitos[i] * coeficientes[i];
-                if (resultado > 9) {
-                    resultado -= 9;
-                }
-                suma += resultado;
+        function validarCedulaEcuatoriana(cedula) {
+            if (cedula.length !== 10) {
+                return false;
             }
 
-            const digitoVerificador = (10 - (suma % 10)) % 10;
+            if (!/^\d+$/.test(cedula)) {
+                return false;
+            }
 
-            return digitoVerificador === digitos[9];
+            if (!/(.)\1{2,}/.test(cedula)) {
+                const digitos = cedula.split('').map(Number);
+                const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+                let suma = 0;
+
+                for (let i = 0; i < 9; i++) {
+                    let resultado = digitos[i] * coeficientes[i];
+                    if (resultado > 9) {
+                        resultado -= 9;
+                    }
+                    suma += resultado;
+                }
+
+                const digitoVerificador = (10 - (suma % 10)) % 10;
+
+                return digitoVerificador === digitos[9];
+            }
+
+            return false;
         }
 
-        return false;
-    }
 
 
-
-</script>
+    </script>
 </body>
 
 

@@ -19,7 +19,7 @@
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <div class="container">
                 <a class="navbar-brand mx-auto" href="#">Gestión de Proyectos</a>
-                <a class="principal ml-auto" href="/">Tareas</a>
+                <a class="principal ml-auto" href="/principal/participantes">Gestionar Participantes</a>
             </div>
         </nav>
     </header>
@@ -44,11 +44,25 @@
                         <p><strong>Encargado:</strong> {{ $tarea['encargado'] }}</p>
                     </div>
                     <div class="card-footer">
-                        <button type="button" class="btn btn-primary cargarModal" id="{{ $tarea['id'] }}"
-                            data-toggle="modal" data-target="#myModalEditar">
-                            Actualizar
-                        </button>
-                        <button type="button" class="btn btn-success verTareas" id="{{ $tarea['id'] }}">Revisar</button>
+                        @if($tarea['estado'] != 'FINALIZADO')
+                            @if($tarea['estado'] == 'PENDIENTE')
+                                <form class="formTareasAsignar" data-id="{{ $tarea['id'] }}">
+                                    <input type="text" value="{{ $tarea['id'] }}" name="idTarea" hidden>
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">Asignarme Tarea</button>
+                                </form>
+                            @else
+                                @if($tarea['encargado'] == $usuario)
+                                <form class="formTareasFinalizar" data-id="{{ $tarea['id'] }}">
+                                    <input type="text" value="{{ $tarea['id'] }}" name="idTarea" hidden>
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">Finalizar Tarea</button>
+                                </form>
+                                @endif
+                            @endif
+                        @endif
+                        <button type="button" class="btn btn-success eliminarTarea"
+                            id="{{ $tarea['id'] }}">Eliminar</button>
                     </div>
                 </div>
             </div>
@@ -88,46 +102,6 @@
         </div>
     </div>
 
-    <div class="modal" id="myModalEditar">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Formulario Editar</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form id="formActualizar">
-                        @csrf
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="id" name="id" hidden>
-                        </div>
-                        <div class="form-group">
-                            <label for="nombreProyecto">Nombre del Proyecto:</label>
-                            <input type="text" class="form-control" id="nombreProyecto" name="nombre" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="descripcionProyecto">Descripción del Proyecto:</label>
-                            <textarea class="form-control" id="descripcionProyecto" name="descripcion" rows="3"
-                                required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="rol">Estado:</label>
-                            <select class="form-control" id="estado" name="estado" required>
-                                <option value="pendiente">pendiente</option>
-                                <option value="finalizado">finalizado</option>
-                                </option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Enviar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModal"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -142,7 +116,7 @@
                     @csrf
                     <div class="modal-body">
                         <label for="text">Está seguro de Eliminar!</label>
-                        <input type="text" id="cedulaH" name="cedula" hidden>
+                        <input type="text" id="idTareaH" name="idTarea" hidden>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -200,6 +174,73 @@
                     $("#modalInformativo").modal("show");
                 });
 
+            });
+
+            $(".eliminarTarea").click(function () {
+                idTarea = $(this).attr("id");
+                $("#idTareaH").val(idTarea);
+                $("#eliminarModal").modal("show");
+            });
+
+            $("#formEliminar").submit(function (event) {
+                event.preventDefault();
+
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: "{{route('eliminarTareas') }}", type: "DELETE", data:
+                        formData, dataType: "json", encode: true,
+                }).done(function (data) {
+                    $("#informacion").text("Proceso realizado con éxito");
+                    $("#modalInformativo").modal("show");
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                }).fail(function (xhr, status, error) {
+                    var errorMessage = "Error de proceso: cédula duplicada";
+                    $("#informacion").text(errorMessage);
+                    $("#modalInformativo").modal("show");
+                });
+
+            });
+
+            $(".formTareasAsignar").submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                var idTarea = $(this).data('id');
+
+                $.ajax({
+                    url: "{{ route('actualizarTareas') }}",
+                    type: "PUT",
+                    data: formData + "&idTarea=" + idTarea + "&estado=progreso",
+                    dataType: "json",
+                    encode: true,
+
+                    success: function (data) {
+                        window.location.href = "{{ route('actualizarTareas')}}";
+                    },
+                    error: function (xhr, status, error) {
+                    }
+                });
+            });
+
+            $(".formTareasFinalizar").submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                var idTarea = $(this).data('id');
+
+                $.ajax({
+                    url: "{{ route('actualizarTareas') }}",
+                    type: "PUT",
+                    data: formData + "&idTarea=" + idTarea + "&estado=finalizar",
+                    dataType: "json",
+                    encode: true,
+
+                    success: function (data) {
+                        window.location.href = "{{ route('mostrarTareas')}}";
+                    },
+                    error: function (xhr, status, error) {
+                    }
+                });
             });
         });
     </script>

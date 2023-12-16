@@ -20,7 +20,6 @@
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <div class="container">
                 <a class="navbar-brand mx-auto" href="#">Gestión de Proyectos</a>
-                <a class="principal ml-auto" href="/">Proyectos</a>
             </div>
         </nav>
     </header>
@@ -34,7 +33,6 @@
 
         <div class="row">
             @foreach($listaProyectos as $proyecto)
-            @csrf
             <div class="col-md-4">
                 <div class="card mb-3">
                     <div class="card-header">
@@ -252,7 +250,6 @@
                     encode: true,
 
                     success: function (data) {
-                        alert("llega");
                         window.location.href = "{{ route('mostrarTareas')}}";
                     },
                     error: function (xhr, status, error) {
