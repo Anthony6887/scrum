@@ -129,12 +129,6 @@
             $("#nuevoRegistro").submit(function (event) {
                 event.preventDefault();
 
-                if (validarCedulaEcuatoriana($("#cedula").val()) == false) {
-                    $("#informacion").text("Cédula no válida");
-                    $("#modalInformativo").modal("show");
-                    return;
-                }
-
                 var formData = $(this).serialize();
 
                 $.ajax({
@@ -152,37 +146,6 @@
             });
 
         });
-        function validarCedulaEcuatoriana(cedula) {
-            if (cedula.length !== 10) {
-                return false;
-            }
-
-            if (!/^\d+$/.test(cedula)) {
-                return false;
-            }
-
-            if (!/(.)\1{2,}/.test(cedula)) {
-                const digitos = cedula.split('').map(Number);
-                const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
-                let suma = 0;
-
-                for (let i = 0; i < 9; i++) {
-                    let resultado = digitos[i] * coeficientes[i];
-                    if (resultado > 9) {
-                        resultado -= 9;
-                    }
-                    suma += resultado;
-                }
-
-                const digitoVerificador = (10 - (suma % 10)) % 10;
-
-                return digitoVerificador === digitos[9];
-            }
-
-            return false;
-        }
-
-
 
     </script>
 </body>
