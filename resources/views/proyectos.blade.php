@@ -18,19 +18,25 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <div class="container">
+            <div class="container d-flex justify-content-between align-items-center">
                 <a class="navbar-brand mx-auto" href="#">Gestión de Proyectos</a>
+                <!-- Agregar enlace para cerrar sesión con clase personalizada -->
+                <a class="btn btn-danger btn-cerrar-sesion align-self-end">Cerrar Sesión</a>
             </div>
         </nav>
     </header>
 
 
-    @section('content ')
-    <div class="contenedor" align="center">
-        <h2>Registro de Proyectos</h2>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Agregar
-            Proyecto</button>
 
+
+    @section('content')
+    <div class="contenedor">
+        <h2>Registro de Proyectos</h2>
+        <br>
+        <button type="button" class="btn btn-primary agregar" data-toggle="modal" data-target="#myModal">Agregar
+            Proyecto</button>
+        <br>
+        <br>
         <div class="row">
             @foreach($listaProyectos as $proyecto)
             <div class="col-md-4">
@@ -44,7 +50,7 @@
                         <p><strong>Fecha de finalización:</strong> {{ $proyecto['fechaFin'] }}</p>
                         <p><strong>Estado:</strong> {{ $proyecto['estado'] }}</p>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer d-flex align-items-center botones">
                         <button type="button" class="btn btn-primary cargarModal" id="" data-toggle="modal"
                             data-target="#myModalEditar">
                             Actualizar
@@ -54,16 +60,12 @@
                             @csrf
                             <button type="submit" class="btn btn-success">Revisar</button>
                         </form>
-
                     </div>
                 </div>
             </div>
             @endforeach
-
         </div>
     </div>
-
-
     @show
     <div class="modal" id="myModal">
         <div class="modal-dialog modal-lg">
