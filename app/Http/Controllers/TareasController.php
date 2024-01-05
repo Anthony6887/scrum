@@ -9,16 +9,32 @@ class TareasController extends Controller
     public function mostrarTareas()
     {
         session_start();
-        $listaTareas = $this->obtenerTareas($_SESSION['idProyecto']);
-        $usuario = $_SESSION['usuario'];
-        return view('tareas', compact('listaTareas','usuario'));
+
+        if(isset($_SESSION['usuario'])){
+            $listaTareas = $this->obtenerTareas($_SESSION['idProyecto']);
+            $usuario = $_SESSION['usuario'];
+            $listaSprints = $this->obtenerSprints();
+            $sprint = $_SESSION['sprint'];
+            $rol = $_SESSION['rol'];
+            return view('tareas', compact('listaTareas','usuario','listaSprints','sprint','rol'));
+        }else{
+            return view('login');
+        }
+    }
+
+    public function obtenerSprints()
+    {
+        $client = new Client();
+        $response = $client->get(env('API_URL')."/Apis/Sprint/apiSprint.php?idProyecto=".$_SESSION['idProyecto']."&sprint=".$_SESSION['sprint']);
+        $listaParticipantes = json_decode($response->getBody(), true);
+        return $listaParticipantes;
     }
 
     public function obtenerTareas($idProyecto)
     {
         $client = new Client();
 
-        $response = $client->get("http://localhost/Apis/Tareas/apiTareas.php?proyecto=". $idProyecto);
+        $response = $client->get(env('API_URL')."/Apis/Tareas/apiTareas.php?proyecto=". $idProyecto."&sprint=".$_SESSION['sprint']);
 
         $listaParticipantes = json_decode($response->getBody(), true);
         return $listaParticipantes;
@@ -28,10 +44,29 @@ class TareasController extends Controller
     {
         
         $idProyecto = $peticion->input("idProyecto");
+        $sprint = $peticion->input("sprint");
 
         session_start();
         $_SESSION['idProyecto'] = $idProyecto;
+        $_SESSION['sprint'] = $sprint;
+        $this->establecerRol($_SESSION['idProyecto']);
         echo json_encode($_SESSION['idProyecto']);
+    }
+
+    public function establecerRol($idProyecto){
+        $client = new Client();
+
+        $response = $client->get(env('API_URL')."/Apis/Personas/apiPersonas.php?idProyecto=". $idProyecto."&participante=".$_SESSION['usuario'] . "&rolProyecto=0");
+
+        $rol = json_decode($response->getBody(), true);
+
+        $_SESSION['rol']=$rol;
+    }
+
+    public function establecerSprint(Request $peticion){
+        $sprint = $peticion->input("sprint");
+        session_start();
+        $_SESSION['sprint'] = $sprint;
     }
     public function insertarTareas(Request $peticion)
     {
@@ -44,14 +79,15 @@ class TareasController extends Controller
 
         $cliente = new Client();
 
-        $url = "http://localhost/Apis/Tareas/apiTareas.php";
+        $url = env('API_URL')."/Apis/Tareas/apiTareas.php";
 
         session_start();
 
         $datos = [
             'nombre' => $nombre,
             'descripcion' => $descripcion,
-            'proyecto' => $_SESSION['idProyecto']
+            'proyecto' => $_SESSION['idProyecto'],
+            'sprint' =>$_SESSION['sprint']
         ];
 
         $respuesta = $cliente->request('POST', $url, [
@@ -80,9 +116,9 @@ class TareasController extends Controller
         $url = "";
 
         if($estado == 'progreso'){
-            $url = "http://localhost/Apis/Tareas/apiTareas.php?progreso=0";
+            $url = env('API_URL')."/Apis/Tareas/apiTareas.php?progreso=0";
         }else{
-            $url = "http://localhost/Apis/Tareas/apiTareas.php";
+            $url = env('API_URL')."/Apis/Tareas/apiTareas.php";
         }
 
 
@@ -121,7 +157,7 @@ class TareasController extends Controller
 
         $client = new Client();
 
-        $url = "http://localhost/Apis/Tareas/apiTareas.php";
+        $url = env('API_URL')."/Apis/Tareas/apiTareas.php";
 
         $data = [
             'idTarea' => $idTarea

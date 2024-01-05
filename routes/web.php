@@ -5,11 +5,18 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\ParticipantesController;
 use App\Http\Controllers\ProyectosController;
 use App\Http\Controllers\TareasController;
+use App\Http\Controllers\SprintController;
 
 Route::get('/', function () {
     return view('principal');
 });
 Route::get('/login', function () {
+    session_start();
+
+    $_SESSION = array();
+
+    session_destroy();
+
     return view('login');
 })->name('login');
 Route::get('/registro', function () {
@@ -30,6 +37,10 @@ Route::delete('/principal/proyectos',[ProyectosController::class,'eliminarProyec
 Route::get('/principal/proyectos/tareas',[TareasController::class,'mostrarTareas'])->name('mostrarTareas');
 Route::post('/principal/proyectos/tareas',[TareasController::class,'insertarTareas'])->name('insertarTareas');
 Route::post('/tareas',[TareasController::class,'establecerTareas'])->name('establecerTareas');
+Route::post('/sprint',[TareasController::class,'establecerSprint'])->name('establecerSprint');
 Route::put('/principal/proyectos/tareas',[TareasController::class,'actualizarTareas'])->name('actualizarTareas');
 Route::delete('/principal/proyectos/tareas',[TareasController::class,'eliminarTareas'])->name('eliminarTareas');
+
+Route::post('/agregarSprint',[SprintController::class,'insertarSprint'])->name('insertarSprint');
+Route::delete('/eliminarSprint',[SprintController::class,'eliminarSprint'])->name('eliminarSprint');
 

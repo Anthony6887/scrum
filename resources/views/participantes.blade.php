@@ -7,28 +7,93 @@
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.min.js"> </script>
     <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"> </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js">    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"> </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"> </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"> </script>
     <script src="{{ asset('js/controlTeclado.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
+    <style>
+        /* Estilos para el header */
+        header {
+            background-color: #343a40;
+            padding: 10px 0;
+            color: #fff;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Estilos para el contenedor principal */
+        .header-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            align-items: center;
+        }
+
+        /* Estilos para la sección del logo */
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section .btn-agregar-tarea {
+            margin-right: 10px;
+        }
+
+        /* Estilos para la sección de la barra de navegación */
+
+
+        /* Estilos para la sección del botón de cerrar sesión */
+        .cerrar-section {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            text-decoration: none;
+            color: #fff;
+            /* Color del texto del enlace */
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #fff;
+            /* Color del texto del enlace */
+            font-weight: bold;
+            transition: color 0.3s;
+            /* Transición suave del color al pasar el mouse */
+        }
+    </style>
 </head>
 
-<body>
+<body class="well">
     <header>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <div class="container">
-                <a class="navbar-brand mx-auto" href="#">Gestión de Participantes</a>
+        <div class="header-container">
+            <div class="logo-section">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Agregar
+                    Participante</button>
             </div>
-        </nav>
+
+            <div class="cerrar-section">
+                <div class="navbar-section">
+                    <a class="nav-link" href="/principal/proyectos">Gestion de Proyectos</a>
+                </div>
+
+                <button type="button" class="btn btn-danger btn-cerrar-sesion" data-toggle="modal" data-target="#logoutModal">Cerrar Sesión</button>
+            </div>
+        </div>
     </header>
 
 
     @section('content ')
     <div class="contenedor" align="center">
-        <h2>Gestionar mis Participantes</h2>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Agregar
-            Participante</button>
+        <h2 style="font-weight: bolder;">Gestionar mis Participantes</h2>
+
         <div class="table">
             <table class="table table - striped " id=" tablaParticipantes">
                 <thead>
@@ -42,17 +107,18 @@
                 </thead>
                 <tbody>
                     @foreach($listaParticipantes as $participante)
+                        @if($participante['cedula'] !== $usuario)
                     <tr>
                         <td> {{ $participante['cedula']}}</td>
                         <td> {{ $participante['nombre']}}</td>
                         <td> {{ $participante['apellido']}}</td>
                         <td> {{ $participante['fechaNacimiento']}}</td>
                         <td>
-                            <button type="button" class="btn btn-danger cargarModal" data-toggle="modal"
-                                data-target="#eliminarModal">
+                            <button type="button" class="btn btn-danger cargarModal" data-toggle="modal" data-target="#eliminarModal">
                                 Eliminar </button>
                         </td>
                     </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>
@@ -84,8 +150,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModal"
-        aria-hidden="true">
+    <div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -109,8 +174,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalInformativo" tabindex="-1" role="dialog" aria-labelledby="modalInformativo"
-        aria-hidden="true">
+    <div class="modal fade" id="modalInformativo" tabindex="-1" role="dialog" aria-labelledby="modalInformativo" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -134,36 +198,39 @@
 
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
-            $("#agregarParticipantes").submit(function (event) {
+            $("#agregarParticipantes").submit(function(event) {
                 event.preventDefault();
-                
+
                 var formData = $(this).serialize();
                 $.ajax({
-                    url: "{{route('agregarParticipantes') }}", type: "POST", data:
-                        formData, dataType: "json", encode: true,
-                }).done(function (data) {
+                    url: "{{route('agregarParticipantes') }}",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    encode: true,
+                }).done(function(data) {
                     $("#informacion").text("Proceso realizado con éxito");
                     $("#modalInformativo").modal("show");
-                    setTimeout(function () {
+                    setTimeout(function() {
                         location.reload();
                     }, 2000);
-                }).fail(function (xhr, status, error) {
+                }).fail(function(xhr, status, error) {
                     $("#informacion").text("Error de proceso : cédula no identificada");
                     console.error("Error en la solicitud: " + error);
                 });
 
             });
 
-            $(".cargarModal").click(function () {
+            $(".cargarModal").click(function() {
                 var fila = $(this).closest("tr");
                 var cedula = fila.find("td:eq(0)").text();
                 $("#cedulaH").val(cedula);
             });
 
 
-            $("#eliminarParticipantes").submit(function (event) {
+            $("#eliminarParticipantes").submit(function(event) {
 
                 event.preventDefault();
                 var formData = $(this).serialize();
@@ -173,13 +240,13 @@
                     data: formData,
                     dataType: "json",
                     encode: true,
-                }).done(function (data) {
+                }).done(function(data) {
                     $("#informacion").text("Proceso realizado con éxito");
                     $("#modalInformativo").modal("show");
-                    setTimeout(function () {
+                    setTimeout(function() {
                         location.reload();
                     }, 2000);
-                }).fail(function (xhr, status, error) {
+                }).fail(function(xhr, status, error) {
                     $("#informacion").text("Error de proceso : Conexión Perdida");
                     $("#modalInformativo").modal("show");
                     console.error("Error en la solicitud: " + error);
@@ -187,8 +254,11 @@
 
             });
 
-        });
+            $(".btn-cerrar-sesion").click(function(){
 
+                window.location.href = "{{route('login')}}";
+            });
+        });
     </script>
 </body>
 
