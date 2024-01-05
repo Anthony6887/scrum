@@ -9,15 +9,19 @@ class ProyectosController extends Controller
 {
     public function mostrarProyectos()
     {
-        $listaProyectos = $this->obtenerProyectos();
-        return view('proyectos', compact('listaProyectos'));
+        session_start();
+        if(isset($_SESSION['usuario'])){
+            $listaProyectos = $this->obtenerProyectos();
+            return view('proyectos', compact('listaProyectos'));
+        }else{
+            return view('login');
+        }
     }
 
     public function obtenerProyectos()
     {
         $client = new Client();
-        session_start();
-        $response = $client->get("http://localhost/Apis/Proyectos/apiProyectos.php?participante=".$_SESSION['usuario']);
+        $response = $client->get(env('API_URL')."/Apis/Proyectos/apiProyectos.php?participante=".$_SESSION['usuario']);
         $listaParticipantes = json_decode($response->getBody(), true);
         return $listaParticipantes;
     }
@@ -38,7 +42,7 @@ class ProyectosController extends Controller
 
         $cliente = new Client();
 
-        $url = "http://localhost/Apis/Proyectos/apiProyectos.php";
+        $url = env('API_URL')."/Apis/Proyectos/apiProyectos.php";
 
         $datos = [
             'nombre' => $nombre,
@@ -63,10 +67,10 @@ class ProyectosController extends Controller
     public function actualizarProyectos(Request $peticion)
     {
         $id = $peticion->input("id");
-        $nombre = $peticion->input("nombreProyecto");
-        $descripcion = $peticion->input("descripcionProyecto");
-        $fechaInicio = $peticion->input("fechaInicio");
-        $fechaFin = $peticion->input("fechaFin");
+        $nombre = $peticion->input("nombreProyectoEditar");
+        $descripcion = $peticion->input("descripcionProyectoEditar");
+        $fechaInicio = $peticion->input("fechaInicioEditar");
+        $fechaFin = $peticion->input("fechaFinEditar");
         $estado = $peticion->input("estado");
 
         if ($nombre == '' || $descripcion == '' || $fechaInicio == '' || $fechaFin == '') {
@@ -75,7 +79,7 @@ class ProyectosController extends Controller
 
         $client = new Client();
 
-        $url = "http://localhost/Apis/Proyectos/apiProyectos.php";
+        $url = env('API_URL')."/Apis/Proyectos/apiProyectos.php";
 
         $data = [
             'id' => $id,
@@ -116,7 +120,7 @@ class ProyectosController extends Controller
 
         $client = new Client();
 
-        $url = "http://localhost/Apis/Proyectos/apiProyectos.php";
+        $url = env('API_URL')."/Apis/Proyectos/apiProyectos.php";
 
         $data = [
             'cedula' => $cedula

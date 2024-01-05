@@ -18,16 +18,24 @@ class ParticipantesController extends Controller
 
     public function mostrarParticipantes(){
  
-         $listaParticipantes = $this -> obtenerParticipantes();
- 
-         return view('participantes', compact('listaParticipantes'));
+         session_start();
+         if(isset($_SESSION['usuario']) && $_SESSION['rol'] == 'SCRUM MASTER'){
+            $listaParticipantes = $this -> obtenerParticipantes();
+            $usuario = $_SESSION['usuario'];
+            return view('participantes', compact('listaParticipantes','usuario'));
+         }else{
+            if($_SESSION['rol'] != 'SCRUM MASTER'){
+                return redirect()->route('mostrarProyectos');
+            }else{
+                return view('login');
+            }
+         }
     }
 
     public function obtenerParticipantes(){
         $client = new Client();
-        session_start();
 
-         $response = $client->get("http://localhost/Apis/Personas/apiPersonas.php?idProyecto=".$_SESSION['idProyecto']);
+         $response = $client->get(env('API_URL')."/Apis/Personas/apiPersonas.php?idProyecto=".$_SESSION['idProyecto']);
  
          $listaParticipantes = json_decode($response->getBody(), true);
          return $listaParticipantes;
@@ -43,7 +51,7 @@ class ParticipantesController extends Controller
 
         $cliente = new Client();
 
-        $url = "http://localhost/Apis/Personas/apiPersonas.php";
+        $url = env('API_URL')."/Apis/Personas/apiPersonas.php";
     
         $datos = [
             'cedula' => $cedula,
@@ -75,7 +83,7 @@ class ParticipantesController extends Controller
 
         $client = new Client();
     
-        $url = "http://localhost/Apis/Personas/apiPersonas.php";
+        $url = env('API_URL')."/Apis/Personas/apiPersonas.php";
     
         $data = [
             'cedula' => $cedula,
@@ -107,7 +115,7 @@ class ParticipantesController extends Controller
 
         $client = new Client();
     
-        $url = "http://localhost/Apis/Personas/apiPersonas.php";
+        $url = env('API_URL')."/Apis/Personas/apiPersonas.php";
     
         $data = [
             'cedula' => $cedula
