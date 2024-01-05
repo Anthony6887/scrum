@@ -80,7 +80,7 @@
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
         <form id="formLogin">
-            <input type="text" id="cedula" name="cedula" placeholder="Cédula" required>
+            <input type="text" id="cedula" name="cedula" placeholder="Cédula" maxlength="10"  required>
             <input type="password" id="clave" name="clave" placeholder="Contraseña" required>
             <input type="submit" value="Iniciar Sesión">
         </form>
