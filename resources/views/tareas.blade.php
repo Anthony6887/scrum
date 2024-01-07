@@ -138,11 +138,11 @@
 
     @section('content')
 
-    <div id="header"> Listado de tareas Sprint {{$sprint}}</div>
+    <div id="header"> Listado de tareas Sprint: {{$sprint}}</div>
 
     <div class="contenedorBuscar">
         <div class="form-group">
-            <label for="exampleComboBox">Sprint:</label>
+            <label for="exampleComboBox" style="color: white;">Sprint:</label>
 
             <form id="formSprint">
                 <div class="barraBuscar">
