@@ -16,7 +16,7 @@
     <style>
         /* Estilos para el header */
         header {
-            background-color: #343a40;
+            background-color: #1e1f22;
             padding: 10px 0;
             color: #fff;
             text-align: center;
@@ -76,22 +76,24 @@
 
         .titulo {
             margin-bottom: 25px;
-            color: #007bff;
+            color: white;
 
         }
 
         .card {
+            background-color: #f5f5f5;
+            color: black;
             width: 300px;
             height: 400px;
-            border: 2px solid #007bff;
+            border: 2px solid black;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
         .card:hover {
-            border-color: #0056b3;
-            background-color: #f5f5f5;
+            border-color: black;
+            background-color: #fffdf7;
         }
 
         .card-content {
@@ -137,7 +139,7 @@
                     </div>
                     <div class="card-footer">
                         @if($proyecto['rol']==='SCRUM MASTER')
-                        <button type="button" style="width: 150px; margin-bottom: 5px;" class="btn btn-warning cargarModal" id="{{ $proyecto['id'] }}_{{ $proyecto['nombre'] }}_{{ $proyecto['descripcion'] }}_{{ $proyecto['fechaInicio'] }}_{{ $proyecto['fechaFin'] }}_{{ $proyecto['estado'] }}" data-toggle="modal" data-target="#myModalEditar">
+                        <button type="button" style="width: 150px; margin-bottom: 5px;background-color: #007bff; color: white;" class="btn  cargarModal" id="{{ $proyecto['id'] }}_{{ $proyecto['nombre'] }}_{{ $proyecto['descripcion'] }}_{{ $proyecto['fechaInicio'] }}_{{ $proyecto['fechaFin'] }}_{{ $proyecto['estado'] }}" data-toggle="modal" data-target="#myModalEditar">
                             Actualizar
                         </button>
                         @endif
@@ -346,6 +348,7 @@
                     return true;
                 }
             }
+
             function validarDescripcion() {
                 var descripcion = $("#descripcionProyecto").val();
                 if (descripcion.trim() === "") {
@@ -356,6 +359,7 @@
                     return true;
                 }
             }
+
             function validarDescripcionEditar() {
                 var descripcion = $("#descripcionProyectoEditar").val();
                 if (descripcion.trim() === "") {
@@ -431,7 +435,7 @@
                 $.ajax({
                     url: "{{ route('establecerTareas') }}",
                     type: "POST",
-                    data: formData + "&idProyecto=" + idProyecto +"&sprint=1",
+                    data: formData + "&idProyecto=" + idProyecto + "&sprint=1",
                     dataType: "json",
                     encode: true,
 
@@ -475,7 +479,7 @@
                 $("#btnGuardar").prop("disabled", !habilitarRegistro);
             });
 
-            $(".btn-cerrar-sesion").click(function(){
+            $(".btn-cerrar-sesion").click(function() {
 
                 window.location.href = "{{route('login')}}";
             });

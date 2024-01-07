@@ -15,16 +15,22 @@
     <style>
         /* Estilos para el header */
         header {
-            background-color: #343a40;
+            background-color: #1e1f22;
             padding: 10px 0;
             color: #fff;
             text-align: center;
             width: 100%;
         }
 
+        #header {
+            font-family: 'Roboto', sans-serif;
+            font-weight: bolder;
+        }
+
         /* Estilos para el contenedor principal */
         .header-container {
             max-width: 100%;
+
             margin: 0 auto;
             padding: 0 15px;
             display: grid;
@@ -68,16 +74,49 @@
             transition: color 0.3s;
             /* Transición suave del color al pasar el mouse */
         }
+
+        .contenedorBuscar {
+            width: 80%;
+            margin: 0 auto;
+            background: rgba(237, 234, 230, 0.2);
+            /* Agrega transparencia al color de fondo */
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #sprint {
+            width: 90%;
+        }
+
+        .barraBuscar {
+            display: flex;
+        }
+
+        .btnBuscar {
+            margin-left: 15px;
+            width: fit-content;
+        }
+
+        .acciones {
+            display: flex;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        .tareas {
+            background-color: #2b2d31;
+        }
     </style>
 </head>
 
-<body class="well">
+<body class="tareas">
     <header>
         <div class="header-container">
             <div class="logo-section">
                 @if($rol === 'SCRUM MASTER')
-                <button type="button" class="btn btn-primary btn-agregar-tarea" data-toggle="modal"
-                    data-target="#myModal">Agregar Tarea</button>
+                <button type="button" class="btn btn-primary btn-agregar-tarea" data-toggle="modal" data-target="#myModal">Agregar Tarea</button>
                 @endif
             </div>
 
@@ -90,8 +129,7 @@
                     <a class="nav-link" href="/principal/participantes">Gestionar Participantes</a>
                 </div>
                 @endif
-                <button type="button" class="btn btn-danger btn-cerrar-sesion" data-toggle="modal"
-                    data-target="#logoutModal">Cerrar Sesión</button>
+                <button type="button" class="btn btn-danger btn-cerrar-sesion" data-toggle="modal" data-target="#logoutModal">Cerrar Sesión</button>
             </div>
         </div>
     </header>
@@ -99,74 +137,36 @@
 
 
     @section('content')
-    <!-- <div class="contenedor" align="center">
-        <h2>Registro de Tareas</h2>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Agregar Tarea</button>
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card-columns">
-                    @foreach($listaTareas as $tarea)
-                        <div class="card mb-3" data-state="{{ $tarea['estado'] }}">
-                            <div class="card-header">
-                                <h3>{{ $tarea['nombre'] }}</h3>
-                            </div>
-                            <div class="card-body">
-                                <p>{{ $tarea['descripcion'] }}</p>
-                                <p><strong>Estado:</strong> {{ $tarea['estado'] }}</p>
-                                <p><strong>Encargado:</strong> {{ $tarea['encargado'] }}</p>
-                            </div>
-                            <div class="card-footer">
-                                @if($tarea['estado'] != 'FINALIZADO')
-                                    @if($tarea['estado'] == 'PENDIENTE')
-                                        <form class="formTareasAsignar" data-id="{{ $tarea['id'] }}">
-                                            <input type="text" value="{{ $tarea['id'] }}" name="idTarea" hidden>
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary">Asignarme Tarea</button>
-                                        </form>
-                                    @else
-                                        @if($tarea['encargado'] == $usuario)
-                                            <form class="formTareasFinalizar" data-id="{{ $tarea['id'] }}">
-                                                <input type="text" value="{{ $tarea['id'] }}" name="idTarea" hidden>
-                                                @csrf
-                                                <button type="submit" class="btn btn-primary">Finalizar Tarea</button>
-                                            </form>
-                                        @endif
-                                    @endif
-                                @endif
-                                <button type="button" class="btn btn-success eliminarTarea" id="{{ $tarea['id'] }}">Eliminar</button>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </div> -->
     <div id="header"> Listado de tareas Sprint {{$sprint}}</div>
 
-    <div class="container mt-5" style="background-color:black; color:white">
+    <div class="contenedorBuscar">
         <div class="form-group">
             <label for="exampleComboBox">Sprint:</label>
 
             <form id="formSprint">
-                <select class="form-control" id="sprint">
-                    @foreach($listaSprints as $sprint)
-                    <option value="{{$sprint['numeroSprint']}}">{{$sprint['numeroSprint']}}</option>
-                    @endforeach
-                </select>
+                <div class="barraBuscar">
+                    <select class="form-control" id="sprint">
+                        @foreach($listaSprints as $sprint)
+                        <option value="{{$sprint['numeroSprint']}}">{{$sprint['numeroSprint']}}</option>
+                        @endforeach
+                    </select>
+                    <button type="submit" class="btn btn-primary btnBuscar">Buscar</button>
+                </div>
                 @csrf
-                <button type="submit" style="width: 150px" class="btn btn-success">Buscar</button>
             </form>
             @if($rol === 'SCRUM MASTER')
-            <form id="formAgregarSprint">
-                @csrf
-                <button type="submit" style="width: 150px" class="btn btn-success">Generar Nuevo Sprint</button>
-            </form>
-            <button type="button" style="width: 150px" class="btn btn-success" id="eliminarSprint">Eliminar Sprint</button>
+            <div class="acciones">
+                <form id="formAgregarSprint">
+                    @csrf
+                    <button type="submit" style="width: auto" class="btn btn-success">Generar Nuevo Sprint</button>
+                </form>
+                <button type="button" style="width: auto" class="btn btn-danger" id="eliminarSprint">Eliminar Sprint</button>
+            </div>
             @endif
         </div>
     </div>
-    <div id="container">
+    <div id="contenedorTarjetas">
 
         <div class="task-list task-container" id="pending">
             <h3 class="titulo">Pendientes</h3>
@@ -246,8 +246,7 @@
                         </div>
                         <div class="form-group">
                             <label for="descripcionProyecto">Descripción de la Tarea:</label>
-                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
-                                required></textarea>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
                             <span class="error-message" id="descripcionTarea-error"></span>
                         </div>
                         <div class="modal-footer">
@@ -259,8 +258,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModal"
-        aria-hidden="true">
+    <div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -283,8 +281,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalInformativo" tabindex="-1" role="dialog" aria-labelledby="modalInformativo"
-        aria-hidden="true">
+    <div class="modal fade" id="modalInformativo" tabindex="-1" role="dialog" aria-labelledby="modalInformativo" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -307,8 +304,7 @@
     </div>
 
 
-    <div class="modal fade" id="eliminarSprintModal" tabindex="-1" role="dialog" aria-labelledby="eliminarSprintModal"
-        aria-hidden="true">
+    <div class="modal fade" id="eliminarSprintModal" tabindex="-1" role="dialog" aria-labelledby="eliminarSprintModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -331,7 +327,7 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             function validarNombre() {
                 var nombre = $("#nombre").val();
                 if (/[\d]/.test(nombre)) {
@@ -356,7 +352,7 @@
             $("#nombre").on("input", validarNombre);
             $("#descripcion").on("input", validarDescripcion);
             // Agregar eventos de cambio a los campos de nombre y apellido
-            $("#nombre,#descripcion").on("input", function () {
+            $("#nombre,#descripcion").on("input", function() {
                 validarNombre();
                 validarDescripcion();
                 // Habilitar o deshabilitar el botón de registro según el resultado de las validaciones
@@ -364,7 +360,7 @@
                 $("#btnGuardar").prop("disabled", !habilitarRegistro);
             });
 
-            $("#formAgregar").submit(function (event) {
+            $("#formAgregar").submit(function(event) {
                 event.preventDefault();
 
                 var formData = $(this).serialize();
@@ -374,13 +370,13 @@
                     data: formData,
                     dataType: "json",
                     encode: true,
-                }).done(function (data) {
+                }).done(function(data) {
                     $("#informacion").text("Proceso realizado con éxito");
                     $("#modalInformativo").modal("show");
-                    setTimeout(function () {
+                    setTimeout(function() {
                         location.reload();
                     }, 2000);
-                }).fail(function (xhr, status, error) {
+                }).fail(function(xhr, status, error) {
                     var errorMessage = "Error de proceso: cédula duplicada";
                     $("#informacion").text(errorMessage);
                     $("#modalInformativo").modal("show");
@@ -388,17 +384,17 @@
 
             });
 
-            $(".eliminarTarea").click(function () {
+            $(".eliminarTarea").click(function() {
                 idTarea = $(this).attr("id");
                 $("#idTareaH").val(idTarea);
                 $("#eliminarModal").modal("show");
             });
 
-            $("#eliminarSprint").click(function () {
+            $("#eliminarSprint").click(function() {
                 $("#eliminarSprintModal").modal("show");
             });
 
-            $("#formEliminar").submit(function (event) {
+            $("#formEliminar").submit(function(event) {
                 event.preventDefault();
 
                 var formData = $(this).serialize();
@@ -408,13 +404,13 @@
                     data: formData,
                     dataType: "json",
                     encode: true,
-                }).done(function (data) {
+                }).done(function(data) {
                     $("#informacion").text("Proceso realizado con éxito");
                     $("#modalInformativo").modal("show");
-                    setTimeout(function () {
+                    setTimeout(function() {
                         location.reload();
                     }, 2000);
-                }).fail(function (xhr, status, error) {
+                }).fail(function(xhr, status, error) {
                     var errorMessage = "Error de proceso: cédula duplicada";
                     $("#informacion").text(errorMessage);
                     $("#modalInformativo").modal("show");
@@ -422,7 +418,7 @@
 
             });
 
-            $(".formTareasAsignar").submit(function (event) {
+            $(".formTareasAsignar").submit(function(event) {
                 event.preventDefault();
                 var formData = $(this).serialize();
                 var idTarea = $(this).data('id');
@@ -433,14 +429,14 @@
                     dataType: "json",
                     encode: true,
 
-                    success: function (data) {
+                    success: function(data) {
                         window.location.href = "{{ route('actualizarTareas')}}";
                     },
-                    error: function (xhr, status, error) { }
+                    error: function(xhr, status, error) {}
                 });
             });
 
-            $(".formTareasFinalizar").submit(function (event) {
+            $(".formTareasFinalizar").submit(function(event) {
                 event.preventDefault();
                 var formData = $(this).serialize();
                 var idTarea = $(this).data('id');
@@ -452,19 +448,19 @@
                     dataType: "json",
                     encode: true,
 
-                    success: function (data) {
+                    success: function(data) {
                         window.location.href = "{{ route('mostrarTareas')}}";
                     },
-                    error: function (xhr, status, error) { }
+                    error: function(xhr, status, error) {}
                 });
             });
 
-            $(".btn-cerrar-sesion").click(function () {
+            $(".btn-cerrar-sesion").click(function() {
 
                 window.location.href = "{{route('login')}}";
             });
 
-            $("#formSprint").submit(function (event) {
+            $("#formSprint").submit(function(event) {
                 event.preventDefault();
                 var formData = $(this).serialize();
                 var sprint = $('#sprint').val();
@@ -475,16 +471,16 @@
                     data: formData + "&sprint=" + sprint,
                     dataType: "json",
                     encode: true,
-                    success: function (data) {
+                    success: function(data) {
                         window.location.href = "{{ route('mostrarTareas')}}";
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         window.location.href = "{{ route('mostrarTareas')}}";
                     }
                 });
             });
 
-            $("#formAgregarSprint").submit(function (event) {
+            $("#formAgregarSprint").submit(function(event) {
                 event.preventDefault();
                 var formData = $(this).serialize();
 
@@ -494,25 +490,25 @@
                     data: formData,
                     dataType: "json",
                     encode: true,
-                    success: function (data) {
+                    success: function(data) {
 
                         $("#informacion").text("Proceso realizado con éxito");
                         $("#modalInformativo").modal("show");
-                        setTimeout(function () {
+                        setTimeout(function() {
                             location.reload();
                         }, 2000);
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         $("#informacion").text("Proceso realizado con éxito");
                         $("#modalInformativo").modal("show");
-                        setTimeout(function () {
+                        setTimeout(function() {
                             location.reload();
                         }, 2000);
                     }
                 });
             });
 
-            $("#formSprintEliminar").submit(function (event) {
+            $("#formSprintEliminar").submit(function(event) {
                 event.preventDefault();
                 var formData = $(this).serialize();
                 $("#eliminarSprintModal").modal("hide");
@@ -522,18 +518,18 @@
                     data: formData,
                     dataType: "json",
                     encode: true,
-                    success: function (data) {
+                    success: function(data) {
 
                         $("#informacion").text("Proceso realizado con éxito");
                         $("#modalInformativo").modal("show");
-                        setTimeout(function () {
+                        setTimeout(function() {
                             location.reload();
                         }, 1000);
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         $("#informacion").text("Proceso realizado con éxito");
                         $("#modalInformativo").modal("show");
-                        setTimeout(function () {
+                        setTimeout(function() {
                             location.reload();
                         }, 1000);
                     }

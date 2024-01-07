@@ -25,6 +25,7 @@
             justify-content: center;
             align-items: center;
             background-image: url('../recursos/registro.avif');
+            
         }
 
         .container {

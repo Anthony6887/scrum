@@ -15,7 +15,7 @@
     <style>
         /* Estilos para el header */
         header {
-            background-color: #343a40;
+            background-color: #1e1f22;
             padding: 10px 0;
             color: #fff;
             text-align: center;
@@ -92,7 +92,7 @@
 
     @section('content ')
     <div class="contenedor" align="center">
-        <h2 style="font-weight: bolder;">Gestionar mis Participantes</h2>
+        <h2 style="font-weight: bolder;color: white;">Gestionar mis Participantes</h2>
 
         <div class="table">
             <table class="table table - striped " id=" tablaParticipantes">

@@ -1,10 +1,7 @@
 /* Estilos para el contenedor principal */
 .contenedor {
-    margin: 50px auto;
+    margin: 0 auto;
     padding: 30px;
-    background-color: #f8f9fa; /* Color de fondo más claro */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
-    border-radius: 10px; /* Bordes redondeados */
 }
 
 h2 {
@@ -59,10 +56,10 @@ body.modal-open {
 }
 
 body {
-    background-image: url('../recursos/fondo.avif');
+    background-color: #2b2d31;
     background-size: cover; /* Cubrir todo el fondo */
     background-attachment: fixed; /* Fondo fijo al desplazar */
-    color: #333; /* Color de texto general */
+    color: #cccccc; /* Color de texto general */
 }
 
 /* Estilos para la tabla */
@@ -72,7 +69,9 @@ body {
     margin-top: 20px;
 }
 
-.table th, .table td {
+.table th,
+.table td {
+    color: white;
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #dee2e6; /* Borde inferior más suave */
@@ -80,12 +79,11 @@ body {
 
 /* Efecto de hover */
 .table tr:hover {
-    background-color: #e2e6ea; /* Color de fondo al pasar el mouse */
+    background-color: #292929; /* Color de fondo al pasar el mouse */
     cursor: pointer;
 }
 /* Estilos para el enlace de cerrar sesión */
 .btn-cerrar-sesion {
-    
     font-weight: bold; /* Texto en negrita */
     background-color: #ff5252; /* Color de fondo rojo */
     border-color: #ff5252; /* Color del borde rojo */
@@ -95,31 +93,28 @@ body {
 
 /* Efecto de hover */
 .btn-cerrar-sesion:hover {
-    
     background-color: #ff1a1a; /* Cambio de color de fondo al pasar el mouse */
     border-color: #ff1a1a; /* Cambio de color del borde al pasar el mouse */
 }
-.botones{
+.botones {
     justify-content: center;
 }
 
-
-
-
-
-
 /* nanoscrollbar */
-.nano .pane   { background: #888; }
-.nano .slider { background: #111; }
-
-
-#completed{
-    background-color: #21EBAC;
+.nano .pane {
+    background: #888;
 }
-#inProgress{
-    background-color: #EBB40E;
+.nano .slider {
+    background: #111;
 }
-#container{
+
+#completed {
+    background-color: #21ebac;
+}
+#inProgress {
+    background-color: #ebb40e;
+}
+#container {
     margin: 0 auto;
     width: fit-content;
     min-height: 100%;
@@ -127,38 +122,41 @@ body {
     border: 0;
 }
 
-#header{
+#header {
     font-size: 30px;
     text-align: center;
     margin-bottom: 15px;
     color: #fff;
+    margin-top: 20px;
 }
 
-.task-list{
-    width: 550px;
+.task-list {
+    width: 450px;
     float: left;
-    margin: 0 5px;
+    margin-top: 50px;
+    margin-left: 30px;
+
     background-color: #e3e3e3;
+    color: black;
     min-height: 340px;
     border-radius: 10px;
     padding-bottom: 15px;
 }
 
-.task-list input, .task-list textarea{
+.task-list input,
+.task-list textarea {
     width: 40px;
     margin: 1px 5px;
 }
 
-.task-list input{
+.task-list input {
     height: 30px;
 }
 
-
-
-.todo-task{
+.todo-task {
     border-radius: 5px;
     background-color: #fff;
-    width: 450px;
+    width: 420px;
     height: auto;
     margin: 15px;
     padding: 10px;
@@ -168,36 +166,34 @@ body {
     margin-bottom: 10px;
 }
 
-.task-list input[type="button"]{
+.task-list input[type="button"] {
     width: 100px;
     margin: 5px;
-    
 }
-.task-buttons{
+.task-buttons {
     width: fit-content;
     height: auto;
     margin: 0 auto;
 }
-.todo-task > .task-header{
+.todo-task > .task-header {
     font-weight: bold;
 }
 
-.todo-task > .task-date{
-   font-size: 17px;
+.todo-task > .task-date {
+    font-size: 17px;
     font-style: italic;
 }
 
-.todo-task > .task-description{
+.todo-task > .task-description {
     font-size: 17px;
     margin-bottom: 10px;
-
 }
 
-h3{
+h3 {
     text-align: center;
 }
 
-#delete-div{
+#delete-div {
     display: none;
     background-color: #fff;
     border: 3px dotted #000;
@@ -205,4 +201,16 @@ h3{
     height: 75px;
     line-height: 75px;
     text-align: center;
+}
+label{
+    color: black;
+}
+.modal-title{
+    color: black;
+}
+#informacion{
+    color: black;
+}
+.error-message{
+    color: red;
 }
