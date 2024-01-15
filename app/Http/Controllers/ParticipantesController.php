@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
@@ -42,31 +43,35 @@ class ParticipantesController extends Controller
     }
 
     public function agregarParticipantes(Request $peticion){
-        $cedula = $peticion->input("cedula");
-        session_start();
-
-        if($cedula==''){
-            return false;
-        }
-
-        $cliente = new Client();
-
-        $url = env('API_URL')."/Apis/Personas/apiPersonas.php";
+        try {
+            $cedula = $peticion->input("cedula");
+            session_start();
     
-        $datos = [
-            'cedula' => $cedula,
-            'idProyecto' => $_SESSION['idProyecto']
-        ];
+            if ($cedula == '' || $cedula == null) {
+                return response()->json(['success' => false, 'message' => 'Cédula vacía o no identificada']);
+            }
     
-        $respuesta = $cliente->request('POST', $url, [
-            'form_params' => $datos,
-        ]);
-
-        $contenido = $respuesta->getBody()->getContents();
-        if($contenido == 'true'){
-            return true;
-        }else{
-            return false;
+            $cliente = new Client();
+            $url = env('API_URL') . "/Apis/Personas/apiPersonas.php";
+        
+            $datos = [
+                'cedula' => $cedula,
+                'idProyecto' => $_SESSION['idProyecto']
+            ];
+    
+            $respuesta = $cliente->request('POST', $url, [
+                'form_params' => $datos,
+            ]);
+    
+            $contenido = $respuesta->getBody()->getContents();
+    
+            if ($contenido == 'true') {
+                return response()->json(['success' => true, 'message' => 'Proceso realizado con éxito']);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Error de proceso: cédula no identificada']);
+            }
+        } catch (Exception $ex) {
+            return response()->json(['success' => false, 'message' => 'Error en la solicitud: ' . $ex->getMessage()]);
         }
     }
 
@@ -116,9 +121,10 @@ class ParticipantesController extends Controller
         $client = new Client();
     
         $url = env('API_URL')."/Apis/Personas/apiPersonas.php";
-    
+        session_start();
         $data = [
-            'cedula' => $cedula
+            'cedula' => $cedula,
+            'idProyecto' => $_SESSION['idProyecto']
         ];
     
         $jsonData = json_encode($data);

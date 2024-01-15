@@ -118,7 +118,11 @@ class TareasController extends Controller
         if($estado == 'progreso'){
             $url = env('API_URL')."/Apis/Tareas/apiTareas.php?progreso=0";
         }else{
-            $url = env('API_URL')."/Apis/Tareas/apiTareas.php";
+            if($estado =='finalizar'){
+                $url = env('API_URL')."/Apis/Tareas/apiTareas.php";
+            }else{
+                return false;
+            }
         }
 
 
