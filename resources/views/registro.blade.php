@@ -25,7 +25,6 @@
             justify-content: center;
             align-items: center;
             background-image: url('../recursos/registro.avif');
-            
         }
 
         .container {
@@ -127,6 +126,25 @@
         </form>
 
         <p>Ya tienes una cuenta. Inicia Sesión <a href="/login">aquí</a>.</p>
+    </div>
+
+    <div class="modal fade" id="modalInformativo" tabindex="-1" role="dialog" aria-labelledby="modalInformativo" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="elimi">Sistema</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                    <div class="modal-body">
+                        <span id="informacion"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                    </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -247,12 +265,14 @@
                     dataType: "json",
                     encode: true,
                 }).done(function(data) {
+                    $("#informacion").text("Proceso realizado con exito");
+                    $("#modalInformativo").modal("show");
                     setTimeout(function() {
                         window.location.href = "{{ route('login') }}";
                     }, 2000);
                 }).fail(function(xhr, status, error) {
                     $("#informacion").text("Error de proceso : cédula duplicada");
-                    alert("Mensaje Informativo : Este usuario ya se encuentra registrado");
+                    $("#modalInformativo").modal("show");
                     console.error("Error en la solicitud: " + error);
                 });
             });

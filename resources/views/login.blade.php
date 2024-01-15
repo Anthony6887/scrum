@@ -89,6 +89,28 @@
         ¿Aún no tienes una cuenta registrate?<a href="/registro"> Aquí</a>
     </div>
 
+    <div class="modal fade" id="modalInformativo" tabindex="-1" role="dialog" aria-labelledby="modalInformativo" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="elimi">Sistema</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="eliminarParticipantes">
+                    @csrf
+                    <div class="modal-body">
+                        <span id="informacion"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function () {
 
@@ -103,7 +125,7 @@
                 });
 
                 $.ajax({
-                    url: "http://localhost/Apis/Personas/apiPersonas.php", type: "GET", data:
+                    url: "http://localhost:81/Apis/Personas/apiPersonas.php", type: "GET", data:
                         formData, dataType: "json", encode: true,
                 }).done(function (data) {
                     if (data.length != 0) {
@@ -112,10 +134,11 @@
                         window.location.href="{{ route('establecerParticipante')}}?cedula=" + cedula;
 
                         setTimeout(function () {
-                            //window.location.href = "{{ route('mostrarProyectos')}}";
+                            window.location.href = "{{ route('mostrarProyectos')}}";
                         }, 2000);
                     } else {
-
+                        $("#informacion").text("Credenciales Incorrectas");
+                        $("#modalInformativo").modal("show");
                     }
 
                 }).fail(function (xhr, status, error) {

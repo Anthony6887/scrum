@@ -15,7 +15,7 @@
     <style>
         /* Estilos para el header */
         header {
-            background-color: #1e1f22;
+            background-color: #343a40;
             padding: 10px 0;
             color: #fff;
             text-align: center;
@@ -92,7 +92,7 @@
 
     @section('content ')
     <div class="contenedor" align="center">
-        <h2 style="font-weight: bolder;color: white;">Gestionar mis Participantes</h2>
+        <h2 style="font-weight: bolder;">Gestionar mis Participantes</h2>
 
         <div class="table">
             <table class="table table - striped " id=" tablaParticipantes">
@@ -201,27 +201,32 @@
         $(document).ready(function() {
 
             $("#agregarParticipantes").submit(function(event) {
-                event.preventDefault();
+        event.preventDefault();
 
-                var formData = $(this).serialize();
-                $.ajax({
-                    url: "{{route('agregarParticipantes') }}",
-                    type: "POST",
-                    data: formData,
-                    dataType: "json",
-                    encode: true,
-                }).done(function(data) {
-                    $("#informacion").text("Proceso realizado con éxito");
+        var formData = $(this).serialize();
+        $.ajax({
+            url: "{{route('agregarParticipantes') }}",
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            encode: true,
+        }).done(function(data) {
+            if (data.success) {
+                $("#informacion").text(data.message);
+                $("#modalInformativo").modal("show");
+                setTimeout(function() {
+                    location.reload();
+                }, 2000);
+            } else {
+                $("#informacion").text("Cédula no encontrada");
                     $("#modalInformativo").modal("show");
-                    setTimeout(function() {
-                        location.reload();
-                    }, 2000);
-                }).fail(function(xhr, status, error) {
-                    $("#informacion").text("Error de proceso : cédula no identificada");
-                    console.error("Error en la solicitud: " + error);
-                });
+            }
+        }).fail(function(xhr, status, error) {
+            $("#informacion").text("Error de proceso: cédula no identificada");
+            console.error("Error en la solicitud: " + error);
+        });
+    });
 
-            });
 
             $(".cargarModal").click(function() {
                 var fila = $(this).closest("tr");
